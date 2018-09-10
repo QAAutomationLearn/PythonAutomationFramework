@@ -16,7 +16,7 @@ driver.implicitly_wait(5)
 
 try:
     # logger.info('最大化浏览器')
-    # driver.maximize_window()
+    # browser.maximize_window()
     logger.info('前往 https://www.utest.com/articles')
     driver.get('https://www.utest.com/articles')
     time.sleep(2)

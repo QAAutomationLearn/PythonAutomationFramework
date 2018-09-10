@@ -34,7 +34,7 @@ class Logger:
         if not os.path.exists(RESULTS_LOGS_DIR):
             os.makedirs(RESULTS_LOGS_DIR)
         self.log_file_path = os.path.join(RESULTS_LOGS_DIR, self.log_file_name)
-        self.formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(module)s][%(funcName)s]: %(message)s')
+        self.formatter = logging.Formatter('[%(asctime)s][%(levelname)s]: %(message)s')
         self.console_output_level = ConsoleLevel
         self.file_output_level = FileLevel
         self.backup_count = 20
