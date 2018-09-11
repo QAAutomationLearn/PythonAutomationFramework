@@ -9,6 +9,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # CONFIG DIR
 CONFIG_DIR = os.path.join(ROOT_DIR, "Config")
 FRAME_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, 'FrameConfig.ini')
+ELEMENT_LOCATOR_FILE_PATH = os.path.join(CONFIG_DIR, 'ElementLocator.json')
 
 # BACKUP DIR
 BACKUP_DIR = os.path.join(ROOT_DIR, "Backup")

@@ -1,0 +1,16 @@
+{
+    "NavigateBar": {
+        "navigate_bar": ["css selector", ".nav-menu-open"],
+        "utest_button": ["xpath", "//img[@src='assets/images/uTestLogoNav.svg']"],
+        "articles_button": ["xpath", "//a[@ui-sref='article']"],
+        "training_button": ["xpath", "//a[@ui-sref='course({track: 1})']"],
+        "forums_button": ["link text", "Forums"],
+        "tools_button": ["xpath", "//a[@ui-sref='tool']"],
+        "projects_button": ["xpath", "//a[@ui-sref='project']"]
+
+    },
+    "HomePage": {
+        "expand_navigate_button": ["class name", "hamburger"],
+        "title_label": ["class name", "section-title"]
+    }
+}

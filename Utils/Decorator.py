@@ -39,7 +39,7 @@ def logger_browser(exc=WebDriverException):
                 return result
             except exc as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[Exception]: {0}: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise
@@ -60,7 +60,7 @@ def logger_wait(exc=WebDriverException):
                 return result
             except exc as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[Exception]: {0}: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise
@@ -86,7 +86,7 @@ def logger_element(exc=WebDriverException):
                 logger.warning('[TimeoutException]: Fail to locate element {0}'.format(_element_name))
             except exc as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[Exception]: {0}: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise

@@ -5,6 +5,7 @@ from Src.Browser import Browser
 from Src.Wait import Wait
 from Utils.Decorator import logger_element
 from Utils.ParseConfig import parseConfig
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import time
 
 WAIT_UNTIL_TIMEOUT = parseConfig.time_config('WaitUntilTimeout')
@@ -59,19 +60,28 @@ class Element(metaclass=MetaDecorator):
         return value
 
     def is_displayed(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
-        Wait(self.driver).element_visible(self.locator, timeout, frequency)
-        result = Browser(self.driver)._get_element(self.locator).is_displayed()
-        return result
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_element(self.locator).is_displayed()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
 
     def is_enabled(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
-        Wait(self.driver).element_visible(self.locator, timeout, frequency)
-        result = Browser(self.driver)._get_element(self.locator).is_enabled()
-        return result
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_element(self.locator).is_enabled()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
 
     def is_selected(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
-        Wait(self.driver).element_visible(self.locator, timeout, frequency)
-        result = Browser(self.driver)._get_element(self.locator).is_selected()
-        return result
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_element(self.locator).is_selected()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
 
     def switch_to_frame(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
         result = Wait(self.driver).frame_switchable(self.locator, timeout, frequency)
