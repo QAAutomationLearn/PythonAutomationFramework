@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from Utils.Decorator import logger_result
+from Utils.Decorator import logger_browser
 from Utils.ParseConfig import parseConfig
 from Utils.Paths import RESULTS_SCREENSHOTS_DIR
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.wait import WebDriverWait
 import time
 import os
@@ -22,15 +21,23 @@ class MetaDecorator(type):
         for attr, val in cls_dict.items():
             if val.__class__.__name__ == 'function':
                 # 列表中方法的日志不在这里记录，所以为了避免重复记日志，将其排除
-                if attr not in ['get_element', 'get_elements']:
-                    cls_dict[attr] = logger_result(exc=WebDriverException)(val)
+                if attr not in ['__init__', '_get_element', '_get_elements']:
+                    cls_dict[attr] = logger_browser()(val)
         return type.__new__(mcs, cls_name, supers, cls_dict)
 
 
 class Browser(metaclass=MetaDecorator):
-
+    """封装了selenium的WebDriver类"""
     def __init__(self, driver):
         self.driver = driver
+
+    def _get_element(self, locator):
+        """该方法专门给Element封装用，所以写作私有方法，平时不需要调用"""
+        return self.driver.find_element(by=locator[0], value=locator[1])
+
+    def _get_elements(self, locator):
+        """该方法专门给Element封装用，所以写作私有方法，平时不需要调用"""
+        return self.driver.find_elements(by=locator[0], value=locator[1])
 
     def get_element(self, locator, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
         """
