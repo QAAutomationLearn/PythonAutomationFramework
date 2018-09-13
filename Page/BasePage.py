@@ -15,11 +15,14 @@ class BasePage:
         self.browser = Browser(self.driver)
         self.wait = Wait(self.driver)
 
-    def _define_element(self):
+    def _define_element(self, get_locator=False):
         element_path = '{0}.{1}'.format(self.__class__.__name__, inspect.stack()[1][3])
         parse_locator = ParseLocator()
         locator = parse_locator.get_locator(element_path)
-        return Element(self.driver, element_path, locator)
+        if get_locator:
+            return locator
+        else:
+            return Element(self.driver, element_path, locator)
 
 
 if __name__ == '__main__':

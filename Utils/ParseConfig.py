@@ -26,6 +26,28 @@ class ParseConfig:
             logger.exception('[Exception]:', exc_info=True)
             raise e
 
+    def exception_screenshot(self):
+        try:
+            value = self.config.get('TestFramework', 'ExceptionScreenshot')
+            value = True if value != 'False' else False
+            return value
+        except Exception as e:
+            logger.exception('[Exception]:', exc_info=True)
+            raise e
+
+    def testcase_fail_rerun(self):
+        try:
+            value = self.config.get('TestFramework', 'TestcaseFailRerun')
+            value = eval(value)
+            if not isinstance(value, bool) and not isinstance(value, int):
+                value = False
+            elif value is True:
+                value = 3
+            return value
+        except Exception as e:
+            logger.exception('[Exception]:', exc_info=True)
+            raise e
+
 
 parseConfig = ParseConfig()
 

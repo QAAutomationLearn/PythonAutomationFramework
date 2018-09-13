@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from Utils.ParseConfig import parseConfig
 from Utils.Logger import logger
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 import sys
+
+exception_screenshot = parseConfig.exception_screenshot()
+fail_rerun = parseConfig.testcase_fail_rerun()
 
 
 def logger_caller(cls):
@@ -20,7 +25,7 @@ def logger_caller(cls):
     return Wrapper
 
 
-def logger_browser(exc=WebDriverException):
+def logger_browser():
     """
     装饰Browser类中的实例方法，添加日志，记录调用的方法和调用的结果
     如果是指定异常，则不抛出错误只记录日志，否则抛出
@@ -37,9 +42,10 @@ def logger_browser(exc=WebDriverException):
                 else:
                     logger.debug('[Call]: {0} >> {1}'.format(_cls_name, _met_name))
                 return result
-            except exc as e:
+            except WebDriverException as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.error('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                raise
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise
@@ -47,7 +53,7 @@ def logger_browser(exc=WebDriverException):
     return wrapper
 
 
-def logger_wait(exc=WebDriverException):
+def logger_wait():
     """专门用来装饰Src中的Wait类"""
     def wrapper(func):
         def on_call(*args, **kwargs):
@@ -58,9 +64,12 @@ def logger_wait(exc=WebDriverException):
                 _result = True if result else False
                 logger.debug('[Call]: {0} >> {1} [Return]: {2}'.format(_cls_name, _met_name, _result))
                 return result
-            except exc as e:
+            except TimeoutException as e:
+                logger.warning('[TimeoutException]: {0}'.format(e).rstrip())
+            except WebDriverException as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.error('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                raise
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise
@@ -68,7 +77,7 @@ def logger_wait(exc=WebDriverException):
     return wrapper
 
 
-def logger_element(exc=WebDriverException):
+def logger_element():
     """专门用来装饰Src中的Element类"""
     def wrapper(func):
         def on_call(*args, **kwargs):
@@ -82,11 +91,12 @@ def logger_element(exc=WebDriverException):
                 else:
                     logger.debug('[Call]: {0} >> {1} >> {2}'.format(_cls_name, _met_name, _element_name))
                 return result
-            except TimeoutException:
-                logger.warning('[TimeoutException]: Fail to locate element {0}'.format(_element_name))
-            except exc as e:
+            except NoSuchElementException:
+                logger.error('[NoSuchElementException]: Fail to locate element {0}'.format(_element_name))
+            except WebDriverException as e:
                 exc_type, _, _ = sys.exc_info()
-                logger.warning('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                logger.error('[{0}]: {1}'.format(exc_type.__name__, e).rstrip())
+                raise
             except Exception:
                 logger.exception('[UnwantedException]:')
                 raise
@@ -94,46 +104,60 @@ def logger_element(exc=WebDriverException):
     return wrapper
 
 
+def wrapped_unittest_assertion(func):
+    """用来装饰PUnittest类中所有的AssertXxx方法"""
+    def wrapper(*args, **kwargs):
+        try:
+            logger.debug('[Assert]: {0} >> {1}'.format(func.__name__, format(args[1:])))
+            return func(*args, **kwargs)
+        except AssertionError as e:
+            args[0].Exc_Stack.append(e)
+    return wrapper
+
+
+def wrapped_testcase(screenshot=exception_screenshot, rerun=fail_rerun):
+    """用来装饰所有的测试用例，提供失败后截图和失败后重跑功能"""
+    def wrapper(func):
+        def on_call(*args, **kwargs):
+            # 失败重跑次数
+            if rerun is False:
+                rerun_time = 1
+            elif isinstance(rerun, int):
+                rerun_time = rerun
+            else:
+                rerun_time = 3
+            # _browser是获取测试用例实例的browser属性，因为跨越了xxxPage属性层，所以用到了循环
+            _testcase_name = args[0]._testMethodName
+            _testclass_name = args[0].__class__.__name__
+            _browser = None
+            for attr in dir(args[0]):
+                if hasattr(getattr(args[0], attr), 'browser'):
+                    _browser = getattr(getattr(args[0], attr), 'browser')
+                    break
+            # 循环执行测试用例
+            _rerun_time = rerun_time
+            while rerun_time > 0:
+                try:
+                    logger.info((' TestRunNo: >> {0} '.format(_rerun_time - rerun_time + 1)).center(100, '-'))
+                    result = func(*args, **kwargs)
+                    # 用例执行完毕抛出所有可能存在的AssertionError异常
+                    args[0].raise_exc()
+                    logger.info(' TestResult: '.center(100, '-'))
+                    logger.info('[TestSuccess]: {0} >> {1} '.format(_testclass_name, _testcase_name))
+                    return result
+                except Exception:
+                    if screenshot:
+                        _filename = 'Error_' + _testcase_name
+                        _browser.take_screenshot(_filename)
+                    rerun_time -= 1
+                    if rerun_time == 0:
+                        exc_type, exc_msg, _ = sys.exc_info()
+                        logger.info(' TestResult: '.center(100, '-'))
+                        logger.error('[TestFail]: {0}: {1}'.format(exc_type.__name__, exc_msg))
+                        raise
+        return on_call
+    return wrapper
+
+
 if __name__ == '__main__':
-
-    class TestClass:
-        a = 'a'
-
-        def __init__(self, x, y):
-            self.x = x
-            self.y = y
-            self.deleg = Delegation()
-
-        @property
-        @logger_browser(exc=TypeError)
-        def test_property(self):
-            return self.a
-
-        @classmethod
-        @logger_browser(exc=TypeError)
-        def test_class(cls, z):
-            return cls.a * z
-
-        @logger_browser(exc=TypeError)
-        def test_method(self, z):
-            return [z].index(2)
-
-        @staticmethod
-        @logger_browser(exc=(TypeError, ValueError))
-        def test_static(x, y):
-            return x * y
-
-
-    class Delegation:
-
-        @logger_browser(exc=(TypeError, ValueError))
-        def delegation(self):
-            return 'delegation'
-
-
-    t = TestClass(1, 2)
-    a = t.test_property
-    t.test_static('a', 'b')
-    t.deleg.delegation()
-    t.test_class('a')
-    t.test_method('a')
+    pass

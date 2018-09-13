@@ -83,7 +83,34 @@ class Element(metaclass=MetaDecorator):
         except (TimeoutException, NoSuchElementException):
             return False
 
-    def switch_to_frame(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
-        result = Wait(self.driver).frame_switchable(self.locator, timeout, frequency)
-        time.sleep(2)  # Chrome issue, have to wait sometime after switching frame
-        return result
+
+class Elements(metaclass=MetaDecorator):
+
+    def __init__(self, driver, name, locator):
+        self.locator = locator
+        self.name = name
+        self.driver = driver
+
+    def is_displayed(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_elements(self.locator).is_displayed()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
+
+    def is_enabled(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_elements(self.locator).is_enabled()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
+
+    def is_selected(self, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):
+        try:
+            Wait(self.driver).element_visible(self.locator, timeout, frequency)
+            Browser(self.driver)._get_elements(self.locator).is_selected()
+            return True
+        except (TimeoutException, NoSuchElementException):
+            return False
