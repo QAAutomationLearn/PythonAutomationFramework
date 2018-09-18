@@ -48,6 +48,22 @@ class ParseConfig:
             logger.exception('[Exception]:', exc_info=True)
             raise e
 
+    def browser_name(self):
+        try:
+            value = self.config.get('BrowserRunner', 'BrowserName')
+            return value
+        except Exception as e:
+            logger.exception('[Exception]:', exc_info=True)
+            raise e
+
+    def browser_window_size(self):
+        try:
+            value = self.config.get('BrowserRunner', 'BrowserWindowSize')
+            return value
+        except Exception as e:
+            logger.exception('[Exception]:', exc_info=True)
+            raise e
+
 
 parseConfig = ParseConfig()
 

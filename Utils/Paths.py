@@ -10,6 +10,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_DIR = os.path.join(ROOT_DIR, "Config")
 FRAME_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, 'FrameConfig.ini')
 ELEMENT_LOCATOR_FILE_PATH = os.path.join(CONFIG_DIR, 'ElementLocator.json')
+TESTCASE_LIST_FILE_PATH = os.path.join(CONFIG_DIR, 'TestCaseList.py')
 
 # BACKUP DIR
 BACKUP_DIR = os.path.join(ROOT_DIR, "Backup")
@@ -19,6 +20,9 @@ RESULTS_DIR = os.path.join(ROOT_DIR, "Results")
 RESULTS_LOGS_DIR= os.path.join(RESULTS_DIR, "Logs")
 RESULTS_REPORTS_DIR = os.path.join(RESULTS_DIR, "Reports")
 RESULTS_SCREENSHOTS_DIR = os.path.join(RESULTS_DIR, "Screenshots")
+
+# TESTSUIT DIR
+TESTSUIT_DIR = os.path.join(ROOT_DIR, "TestSuite")
 
 # DRIVER DIR
 DRIVER_DIR = os.path.join(ROOT_DIR, "Drivers")
