@@ -47,9 +47,16 @@ def get_test_set(test_class=testClassName, test_case=testCaseName, priority=test
             # 根据包生成相应的类对象
             class_obj = getattr(package, case[2])
             # 根据类对象获取相应的测试用例
-            _case = class_obj(case[3])
-            # 将测试用例添加入测试套件
-            test_set.addTest(_case)
+            if case[3] in class_obj.__dict__:
+                _case = class_obj(case[3])
+                # 将测试用例添加入测试套件
+                test_set.addTest(_case)
+            else:
+                # 专门处理ddt改变method name的情况，将ddt分类过的test method依次加入test_set
+                for attr in class_obj.__dict__:
+                    if attr.startswith(case[3]):
+                        _case = class_obj(attr)
+                        test_set.addTest(_case)
         return test_set
     except Exception as e:
         logger.error("[Exception]: Make Test Suite Error: {0}".format(e))

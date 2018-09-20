@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from Utils.Decorator import wrapped_unittest_assertion
+from Utils.Decorator import wrapped_testcase
+from Utils.SpecDdt import mk_test_name_
+import ddt
 import unittest
+# 重新定义了 ddt.mk_test_name
+ddt.mk_test_name = mk_test_name_
 
 
 class MetaDecorator(type):
@@ -11,6 +16,9 @@ class MetaDecorator(type):
             if val.__class__.__name__ == 'function':
                 if attr.startswith('assert'):
                     cls_dict[attr] = wrapped_unittest_assertion(val)
+                elif attr.startswith('test'):
+                    pass
+                    cls_dict[attr] = wrapped_testcase()(val)
         return type.__new__(mcs, cls_name, supers, cls_dict)
 
 
@@ -65,21 +73,4 @@ class PUnittest(unittest.TestCase, metaclass=MetaDecorator):
 
 
 if __name__ == '__main__':
-
-    class MyTest(PUnittest):
-
-        def test_equal(self):
-            self.assertEqual(1, 2)
-            self.assertEqual(1, 1)
-            self.assertEqual(3, 1)
-            self.assertEqual('s', 's')
-            self.raise_exc()
-
-        def test_in(self):
-            self.assertIn(1, [1])
-            self.assertIn(1, [2])
-            self.assertIn('a', {'a': 1})
-            self.assertIn('b', {'a': 1})
-            self.raise_exc()
-
-    unittest.main()
+    pass

@@ -11,6 +11,7 @@ CONFIG_DIR = os.path.join(ROOT_DIR, "Config")
 FRAME_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, 'FrameConfig.ini')
 ELEMENT_LOCATOR_FILE_PATH = os.path.join(CONFIG_DIR, 'ElementLocator.json')
 TESTCASE_LIST_FILE_PATH = os.path.join(CONFIG_DIR, 'TestCaseList.py')
+TEST_DATA_FILE_PATH = os.path.join(CONFIG_DIR, 'TestData.csv')
 
 # BACKUP DIR
 BACKUP_DIR = os.path.join(ROOT_DIR, "Backup")

@@ -6,6 +6,7 @@ from Utils.Logger import logger
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
+from functools import wraps
 import sys
 
 exception_screenshot = parseConfig.exception_screenshot()
@@ -32,6 +33,7 @@ def logger_browser():
     无法装饰静态方法和类方法，因为类名是从*args中取的第一个参数
     """
     def wrapper(func):
+        @wraps(func)
         def on_call(*args, **kwargs):
             _cls_name = args[0].__class__.__name__
             _met_name = func.__name__
@@ -54,8 +56,9 @@ def logger_browser():
 
 
 def logger_wait():
-    """专门用来装饰Src中的Wait类"""
+    """用来装饰Src中的Wait类"""
     def wrapper(func):
+        @wraps(func)
         def on_call(*args, **kwargs):
             _cls_name = args[0].__class__.__name__
             _met_name = func.__name__
@@ -78,8 +81,9 @@ def logger_wait():
 
 
 def logger_element():
-    """专门用来装饰Src中的Element类"""
+    """用来装饰Src中的Element类"""
     def wrapper(func):
+        @wraps(func)
         def on_call(*args, **kwargs):
             _cls_name = args[0].__class__.__name__
             _met_name = func.__name__
@@ -106,6 +110,7 @@ def logger_element():
 
 def wrapped_unittest_assertion(func):
     """用来装饰PUnittest类中所有的AssertXxx方法"""
+    @wraps(func)
     def wrapper(*args, **kwargs):
         try:
             logger.debug('[Assert]: {0} >> {1}'.format(func.__name__, format(args[1:])))
@@ -118,6 +123,7 @@ def wrapped_unittest_assertion(func):
 def wrapped_testcase(screenshot=exception_screenshot, rerun=fail_rerun):
     """用来装饰所有的测试用例，提供失败后截图和失败后重跑功能"""
     def wrapper(func):
+        @wraps(func)
         def on_call(*args, **kwargs):
             # 失败重跑次数
             if rerun is False:

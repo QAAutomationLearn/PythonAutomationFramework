@@ -2,15 +2,25 @@
     "NavigateBar": {
         "navigate_bar": ["css selector", ".nav-menu-open"],
         "utest_button": ["xpath", "//img[@src='assets/images/uTestLogoNav.svg']"],
+        "user_name_link": ["xpath", "//a[@ng-bind='currentUser.name']"],
         "articles_button": ["xpath", "//a[@ui-sref='article']"],
         "training_button": ["xpath", "//a[@ui-sref='course({track: 1})']"],
         "forums_button": ["link text", "Forums"],
         "tools_button": ["xpath", "//a[@ui-sref='tool']"],
-        "projects_button": ["xpath", "//a[@ui-sref='project']"]
-
+        "projects_button": ["xpath", "//a[@ui-sref='project']"],
+        "sign_out_button": ["link text", "Sign Out"]
     },
     "HomePage": {
         "expand_navigate_button": ["class name", "hamburger"],
-        "title_label": ["class name", "section-title"]
+        "title_label": ["class name", "section-title"],
+        "sign_in_button": ["link text", "Sign in"]
+    },
+    "LoginPage": {
+        "username_textbox": ["name", "username"],
+        "username_empty_prompt": ["css selector", ".has-error[name='username']"],
+        "password_textbox": ["name", "password"],
+        "password_empty_prompt": ["css selector", ".has-error[name='password']"],
+        "access_account_button": ["xpath", "//button[@type='submit']"],
+        "wrong_credential_label": ["css selector", ".login-form-wrapper .error-message"]
     }
 }

@@ -6,7 +6,6 @@ from Page.HomePage import HomePage
 from Src.PUnittest import PUnittest
 from Src.Engine import ENGINE
 from Utils.Logger import logger
-from Utils.Decorator import wrapped_testcase
 import unittest
 import time
 
@@ -31,7 +30,6 @@ class TestSubPageTitle(PUnittest):
     def tearDown(self):
         logger.info('*' * 100 + '\n')
 
-    @wrapped_testcase()
     def test_articles_title(self):
         navigate_bar_visible = self.navigateBar.navigate_bar().is_displayed()
         if not navigate_bar_visible:
@@ -41,7 +39,6 @@ class TestSubPageTitle(PUnittest):
         title_label_text = self.homePage.title_label().get_text()
         self.assertEqual(title_label_text, 'Software Testing Articles')
 
-    @wrapped_testcase()
     def test_training_title(self):
         navigate_bar_visible = self.navigateBar.navigate_bar().is_displayed()
         if not navigate_bar_visible:
@@ -51,7 +48,6 @@ class TestSubPageTitle(PUnittest):
         title_label_text = self.homePage.title_label().get_text()
         self.assertEqual(title_label_text, 'Software Testing Courses')
 
-    @wrapped_testcase()
     def test_forums_title(self):
         navigate_bar_visible = self.navigateBar.navigate_bar().is_displayed()
         if not navigate_bar_visible:
@@ -61,7 +57,6 @@ class TestSubPageTitle(PUnittest):
         title_label_text = self.homePage.title_label().get_text()
         self.assertEqual(title_label_text, 'xxxxxxxxxxxxxxxx')
 
-    @wrapped_testcase()
     def test_tools_title(self):
         navigate_bar_visible = self.navigateBar.navigate_bar().is_displayed()
         if not navigate_bar_visible:
@@ -71,7 +66,6 @@ class TestSubPageTitle(PUnittest):
         title_label_text = self.homePage.title_label().get_text()
         self.assertEqual(title_label_text, 'Software Testing Tool Reviews')
 
-    @wrapped_testcase()
     def test_projects_title(self):
         navigate_bar_visible = self.navigateBar.navigate_bar().is_displayed()
         if not navigate_bar_visible:

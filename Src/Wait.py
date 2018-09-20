@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from Utils.ParseConfig import parseConfig
+from Utils.ParseConfig import IMPLICITY_WAIT_TIME, WAIT_UNTIL_TIMEOUT
+from Utils.ParseConfig import WAIT_UNTIL_NOT_TIMEOUT, WAIT_FREQUENCY
 from Utils.Decorator import logger_wait
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-
-WAIT_IMPLICITY_TIMEOUT = parseConfig.time_config('ImplicityWaitTime')
-WAIT_UNTIL_TIMEOUT = parseConfig.time_config('WaitUntilTimeout')
-WAIT_UNTIL_NOT_TIMEOUT = parseConfig.time_config('WaitUntilNotTimeout')
-WAIT_FREQUENCY = parseConfig.time_config('WaitFrequency')
+import time as Time
 
 
 class MetaDecorator(type):
@@ -26,7 +23,12 @@ class Wait(metaclass=MetaDecorator):
     def __init__(self, driver):
         self.driver = driver
 
-    def set_implicitly_wait(self, timeout=WAIT_IMPLICITY_TIMEOUT):
+    # 用于操作过快时短暂的休眠
+    def sleep(self, time=1):
+        result = Time.sleep(time)
+        return result
+
+    def set_implicitly_wait(self, timeout=IMPLICITY_WAIT_TIME):
         self.driver.implicitly_wait(timeout)
 
     def title_is(self, title, timeout=WAIT_UNTIL_TIMEOUT, frequency=WAIT_FREQUENCY):

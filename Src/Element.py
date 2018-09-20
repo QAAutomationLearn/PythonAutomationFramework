@@ -4,12 +4,8 @@
 from Src.Browser import Browser
 from Src.Wait import Wait
 from Utils.Decorator import logger_element
-from Utils.ParseConfig import parseConfig
+from Utils.ParseConfig import WAIT_UNTIL_TIMEOUT, WAIT_FREQUENCY
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-import time
-
-WAIT_UNTIL_TIMEOUT = parseConfig.time_config('WaitUntilTimeout')
-WAIT_FREQUENCY = parseConfig.time_config('WaitFrequency')
 
 
 class MetaDecorator(type):

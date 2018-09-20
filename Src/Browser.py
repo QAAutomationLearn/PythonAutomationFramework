@@ -2,21 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from Utils.Decorator import logger_browser
-from Utils.ParseConfig import parseConfig
+from Utils.ParseConfig import WAIT_UNTIL_TIMEOUT, WAIT_FREQUENCY
 from Utils.Paths import RESULTS_SCREENSHOTS_DIR
 from selenium.webdriver.support.wait import WebDriverWait
 import time
 import os
 
-WAIT_UNTIL_TIMEOUT = parseConfig.time_config('WaitUntilTimeout')
-WAIT_FREQUENCY = parseConfig.time_config('WaitFrequency')
-
 
 class MetaDecorator(type):
-    """
-    这该死的元类自动装饰时一定要注意方法是否已经被装饰过了
-    如果装饰顺序不对，就没有效果，很鸡肋的功能啊...
-    """
     def __new__(mcs, cls_name, supers, cls_dict):
         for attr, val in cls_dict.items():
             if val.__class__.__name__ == 'function':

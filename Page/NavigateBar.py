@@ -13,6 +13,9 @@ class NavigateBar(BasePage):
     def utest_button(self, get_locator=False):
         return self._define_element(get_locator=get_locator)
 
+    def user_name_link(self, get_locator=False):
+        return self._define_element(get_locator=get_locator)
+
     def articles_button(self, get_locator=False):
         return self._define_element(get_locator=get_locator)
 
@@ -27,6 +30,10 @@ class NavigateBar(BasePage):
 
     def projects_button(self, get_locator=False):
         return self._define_element(get_locator=get_locator)
+
+    def sign_out_button(self, get_locator=False):
+        return self._define_element(get_locator=get_locator)
+
 
 if __name__ == '__main__':
     driver = None
